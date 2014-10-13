@@ -31,7 +31,7 @@ public class NeoClass {
     private Relationship relationships;
     //private IndexDefinition indexDefinition;
     private long startTime, endTime, elapsedTime;
-    private final Index<Node> nodeIndex;
+    private Index<Node> nodeIndex;
 
     private static enum RelTypes implements RelationshipType {
 
@@ -39,8 +39,9 @@ public class NeoClass {
     }
 
     public NeoClass() {
+
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB");
-        registerShutdownHook(graphDb);
+        this.registerShutdownHook(graphDb);
         nodeIndex = graphDb.index().forNodes("WebSiteId");
 
     }
@@ -112,7 +113,7 @@ public class NeoClass {
                 tx.success();
             } catch (IOException e) {
                 System.out.println("IO Error" + e);
-                System.exit(1);
+
             } finally {
                 tx.close();
             }
