@@ -94,7 +94,6 @@ public class NeoClass {
                     }
                     j++;
                     firstNodeID = array[0];
-                    i++;
                     insertedNodeNo1 = this.CreateAndIndexNode(firstNodeID);
 
                     secondNodeID = array[1];
