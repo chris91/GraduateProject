@@ -23,7 +23,7 @@ import org.neo4j.graphdb.index.Index;
  */
 public class NeoClass {
 
-    private GraphDatabaseService graphDb;
+    private final GraphDatabaseService graphDb;
     private Node node;
     private ExecutionEngine engine;
     //private Node firstNodes;
@@ -31,7 +31,7 @@ public class NeoClass {
     private Relationship relationships;
     //private IndexDefinition indexDefinition;
     private long startTime, endTime, elapsedTime;
-    private Index<Node> nodeIndex;
+    private final Index<Node> nodeIndex;
 
     private static enum RelTypes implements RelationshipType {
 
