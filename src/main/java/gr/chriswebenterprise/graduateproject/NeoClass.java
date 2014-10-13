@@ -8,21 +8,14 @@ package gr.chriswebenterprise.graduateproject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.schema.IndexDefinition;
-import org.neo4j.graphdb.schema.Schema;
 
 /**
  *
@@ -38,7 +31,7 @@ public class NeoClass {
     private Relationship relationships;
     //private IndexDefinition indexDefinition;
     private long startTime, endTime, elapsedTime;
-    Index<Node> nodeIndex;
+    private Index<Node> nodeIndex;
 
     private static enum RelTypes implements RelationshipType {
 
