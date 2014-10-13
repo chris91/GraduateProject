@@ -20,6 +20,7 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.schema.IndexDefinition;
 import org.neo4j.graphdb.schema.Schema;
 
@@ -34,10 +35,10 @@ public class NeoClass {
     private ExecutionEngine engine;
     //private Node firstNodes;
     //private Node secondNodes;
-    private Relationship relationship;
-    private IndexDefinition indexDefinition;
+    private Relationship relationships;
+    //private IndexDefinition indexDefinition;
     private long startTime, endTime, elapsedTime;
-    //Index<Node> nodeIndex;
+    Index<Node> nodeIndex;
 
     private static enum RelTypes implements RelationshipType {
 
@@ -48,19 +49,20 @@ public class NeoClass {
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB");
         registerShutdownHook(graphDb);
 
-        try (Transaction tx = graphDb.beginTx()) {
+        nodeIndex = graphDb.index().forNodes("WebSiteId");
 
-            graphDb.schema()
-                    .constraintFor(DynamicLabel.label("WebSiteId"))
-                    .assertPropertyIsUnique("nodeId")
-                    .create();
-            tx.success();
+    }
 
-            /*Schema schema = graphDb.schema();
-             indexDefinition = schema.indexFor(DynamicLabel.label("WebSiteId"))
-             .on("nodeId")
-             .create();
-             tx.success();*/
+    private Node CreateAndIndexNode(String myNodeID) {
+
+        Node tmpNode = graphDb.createNode();
+        tmpNode.setProperty("nodeId", myNodeID);
+        Node newNode;
+        newNode = nodeIndex.putIfAbsent(tmpNode, "nodeId", myNodeID);
+        if (newNode != null) {
+            return newNode;
+        } else {
+            return tmpNode;
         }
     }
 
@@ -84,41 +86,30 @@ public class NeoClass {
 
                     Node insertedNodeNo1 = null;
                     Node insertedNodeNo2 = null;
+                    String firstNodeID, secondNodeID;
 
                     array = line.split("\t");
                     if (array.length != 2) {
                         continue;
                     }
                     j++;
-                    for (int z = 0; z < 2; z++) {
-                        ResourceIterator<Node> resultIterator = null;
-                        engine = new ExecutionEngine(graphDb);
-                        String queryString = "MATCH (n:WebSiteId {nodeId: {nodeId}}) RETURN n";
-                        Map<String, Object> parameters = new HashMap<>();
-                        parameters.put("nodeId", new Integer(array[z]));
-                        resultIterator = engine.execute(queryString, parameters).columnAs("n");
-                        if (resultIterator.hasNext()) {
-                            node = resultIterator.next();
-                            //System.out.println(j + " :      " + node.toString());
-                            //System.out.println(j+" :      "+ resultIterator.toString());
-                            if (z == 0) {
-                                insertedNodeNo1 = node;
-                            } else {
-                                insertedNodeNo2 = node;
-                            }
-                        } else {
-                            if (z == 0) {
-                                insertedNodeNo1 = graphDb.createNode();
-                                insertedNodeNo1.addLabel(DynamicLabel.label("WebSiteId"));
-                                insertedNodeNo1.setProperty("nodeId", new Integer(array[z]));
-                            } else {
-                                insertedNodeNo2 = graphDb.createNode();
-                                insertedNodeNo2.addLabel(DynamicLabel.label("WebSiteId"));
-                                insertedNodeNo2.setProperty("nodeId", new Integer(array[z]));
-                            }
+                    firstNodeID = array[0];
+                    i++;
+                    insertedNodeNo1 = this.CreateAndIndexNode(firstNodeID);
+
+                    secondNodeID = array[1];
+                    insertedNodeNo2 = this.CreateAndIndexNode(secondNodeID);
+                    if (insertedNodeNo2 != null) {
+                        if (insertedNodeNo1 != null) {
+                            relationships = insertedNodeNo1.createRelationshipTo(insertedNodeNo2, RelTypes.POINTS_TO);
+                            //relationships.setProperty( "RelationshipType", RelType );
                         }
+                        // System.out.println("2: Successfull Node Insertion to Index");
+                    } else {
+                        //System.out.println("2: FAILURE, Node allready exists");
+
                     }
-                    relationship = insertedNodeNo1.createRelationshipTo(insertedNodeNo2, RelTypes.POINTS_TO);
+                    //relationship = insertedNodeNo1.createRelationshipTo(insertedNodeNo2, RelTypes.POINTS_TO);
                     //System.out.println(j+" :      "+ relationship.toString());
                 }
 
