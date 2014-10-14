@@ -58,4 +58,15 @@ public class SQLClass {
             Logger.getLogger(SQLClass.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void insertRandomValuesIntoNodes(String updtQuery){
+        try {
+            startTime = System.currentTimeMillis();
+            statement.executeUpdate(updtQuery);
+            endTime = System.currentTimeMillis();
+            elapsedTime = endTime - startTime;
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
