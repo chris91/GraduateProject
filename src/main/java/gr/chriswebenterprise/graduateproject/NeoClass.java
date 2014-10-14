@@ -42,8 +42,9 @@ public class NeoClass {
 
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB");
         this.registerShutdownHook(graphDb);
-        nodeIndex = graphDb.index().forNodes("WebSiteId");
-
+        try(Transaction tx = graphDb.beginTx()){
+            nodeIndex = graphDb.index().forNodes("WebSiteId");
+        }
     }
 
     private Node CreateAndIndexNode(String myNodeID) {
@@ -64,6 +65,7 @@ public class NeoClass {
         for (int i = 0; i <= 510; i++) {
             Transaction tx = graphDb.beginTx();
             try {
+                //nodeIndex = graphDb.index().forNodes("WebSiteId");
                 String InputFile = "C:\\Users\\chris91\\Desktop\\Snap Datasets\\good sets\\webGOOGLE\\edges_file" + i + ".txt";
                 //String InputFile="data/edges.txt";
                 startTime = System.currentTimeMillis();
