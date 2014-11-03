@@ -69,4 +69,5 @@ public class SQLClass {
             Logger.getLogger(SQLClass.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
 }

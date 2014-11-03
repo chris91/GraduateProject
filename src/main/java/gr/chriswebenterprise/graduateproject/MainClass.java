@@ -45,11 +45,14 @@ public class MainClass {
         //String updtQuery = "update nodes set views = (ceil(rand() * 100000))";
         String catChoise;
         int randNum;
+        //String updtQuery = "update nodes set category = 'catChoise' where category = 'null'";
+        //testClass.insertRandomValuesIntoNodes(updtQuery);
         for(int i=0; i<875713; i++){
             catChoise = listOfCategories.get(randomGenerator.nextInt(listOfCategories.size()));
+            //System.out.println(catChoise);
             //String updtQuery = "update nodes set category = concat(category,'" + listOfCategories.get(randomGenerator.nextInt(listOfCategories.size())).toString() + "')";
             randNum = randomGenerator.nextInt(916427 + 1);
-            String updtQuery = "update nodes set category = 'catChoise' where id = " +  randNum;
+            String updtQuery = "update nodes set category =\"" + catChoise + "\" where id =" +  randNum + " and category = \"catChoise \" ";
             testClass.insertRandomValuesIntoNodes(updtQuery);
         }
     
