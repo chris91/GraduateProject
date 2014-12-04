@@ -41,13 +41,21 @@ public class MainClass {
         
         Random randomGenerator = new Random();
         SQLClass testClass = new SQLClass();
+        
+        //String query = "select * from nodes where id=736";
+        //String query = "select * from nodes group by category";
+        //String query = "select * from nodes order by views";
+        //String query = "select count(*) from nodes";
+        
+        
+        
         //String query = "select count(*) from nodes";
         //String updtQuery = "update nodes set views = (ceil(rand() * 100000))";
         String catChoise;
         int randNum;
         //String updtQuery = "update nodes set category = 'catChoise' where category = 'null'";
         //testClass.insertRandomValuesIntoNodes(updtQuery);
-        for(int i=0; i<875713; i++){
+        /*for(int i=0; i<875713; i++){
             catChoise = listOfCategories.get(randomGenerator.nextInt(listOfCategories.size()));
             //System.out.println(catChoise);
             //String updtQuery = "update nodes set category = concat(category,'" + listOfCategories.get(randomGenerator.nextInt(listOfCategories.size())).toString() + "')";
@@ -55,11 +63,20 @@ public class MainClass {
             String updtQuery = "update nodes set category =\"" + catChoise + "\" where id =" +  randNum + " and category = \"catChoise \" ";
             testClass.insertRandomValuesIntoNodes(updtQuery);
         }
-    
+        */
         //testClass.queryDB(query);
         //testClass.printResults();
         
-        //NeoClass neoTest = new NeoClass();
-        ///neoTest.insertNodesAndRelationships();
+        NeoClass neoTest = new NeoClass();
+        //neoTest.insertNodesAndRelationships();
+        //neoTest.InsertProperties();
+        
+        //System.out.println(neoTest.cypherQueriesInJava("start n=node:WebSiteId(nodeId='736') match (n)-->(m) return m"));
+        //System.out.println(neoTest.cypherQueriesInJava("match (n) return n order by n.views"));
+        System.out.println(neoTest.cypherQueriesInJava("start n=node(*) return n order by n.views"));
+        
+        //System.out.println(neoTest.cypherQueriesInJava("match (n:WebSiteId {nodeId:'736'})-->(m) return n,m"));
+        //System.out.println(neoTest.cypherQueriesInJava("start n=node(*) set n.views=(ceil(rand() * 100000)) return n"));
+        //System.out.println(neoTest.cypherQueriesInJava("match (n) set n.views=(ceil(rand() * 100000)) return n"));
     }
 }
