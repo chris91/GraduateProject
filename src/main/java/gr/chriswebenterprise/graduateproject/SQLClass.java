@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gr.chriswebenterprise.graduateproject;
 
 import java.sql.*;
@@ -11,7 +7,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author chris91
+ * @author chris
  */
 public class SQLClass {
 
@@ -49,9 +45,8 @@ public class SQLClass {
     public void printResults() {
         try {
             while (resultSet.next()) {
-                //System.out.print(resultSet.getInt(1));
-                //System.out.print(": ");
-                System.out.println(resultSet.getInt(1));
+               
+                System.out.println(resultSet.getInt(1)+"\t"+resultSet.getInt(2));
             }
             System.out.println("Elapsed Time:   "+elapsedTime+" ms");
         } catch (SQLException ex) {
@@ -59,7 +54,7 @@ public class SQLClass {
         }
     }
     
-    public void insertRandomValuesIntoNodes(String updtQuery){
+    public void updateDB(String updtQuery){
         try {
             startTime = System.currentTimeMillis();
             statement.executeUpdate(updtQuery);

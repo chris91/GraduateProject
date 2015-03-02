@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gr.chriswebenterprise.graduateproject;
 
 import java.io.BufferedReader;
@@ -22,17 +18,12 @@ import org.neo4j.graphdb.index.Index;
 
 /**
  *
- * @author chris91
+ * @author chris
  */
 public class NeoClass {
 
     private final GraphDatabaseService graphDb;
-    private Node node;
-    private ExecutionEngine engine;
-    //private Node firstNodes;
-    //private Node secondNodes;
     private Relationship relationships;
-    //private IndexDefinition indexDefinition;
     private long startTime, endTime, elapsedTime;
     private Index<Node> nodeIndex;
 
@@ -43,14 +34,14 @@ public class NeoClass {
 
     public NeoClass() {
 
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB26_11");
+        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB");
         this.registerShutdownHook(graphDb);
         try (Transaction tx = graphDb.beginTx()) {
             nodeIndex = graphDb.index().forNodes("WebSiteId");
         }
     }
 
-    private Node CreateAndIndexNode(String myNodeID) {
+    private Node createAndIndexNode(String myNodeID) {
 
         Node tmpNode = graphDb.createNode();
         tmpNode.setProperty("nodeId", myNodeID);
@@ -68,9 +59,8 @@ public class NeoClass {
         for (int i = 0; i <= 510; i++) {
             Transaction tx = graphDb.beginTx();
             try {
-                //nodeIndex = graphDb.index().forNodes("WebSiteId");
                 String InputFile = "C:\\Users\\chris91\\Desktop\\Snap Datasets\\good sets\\webGOOGLE\\edges_file" + i + ".txt";
-                //String InputFile="data/edges.txt";
+                
                 startTime = System.currentTimeMillis();
 
                 FileReader fr = new FileReader(InputFile);
@@ -79,7 +69,7 @@ public class NeoClass {
                 String RelType, line, array[];
                 int j = 0;
 
-                //Label label = DynamicLabel.label("WebSiteId");
+               
                 while ((line = br1.readLine()) != null) {
 
                     Node insertedNodeNo1 = null;
@@ -92,22 +82,18 @@ public class NeoClass {
                     }
                     j++;
                     firstNodeID = array[0];
-                    insertedNodeNo1 = this.CreateAndIndexNode(firstNodeID);
+                    insertedNodeNo1 = this.createAndIndexNode(firstNodeID);
 
                     secondNodeID = array[1];
-                    insertedNodeNo2 = this.CreateAndIndexNode(secondNodeID);
+                    insertedNodeNo2 = this.createAndIndexNode(secondNodeID);
                     if (insertedNodeNo2 != null) {
                         if (insertedNodeNo1 != null) {
                             relationships = insertedNodeNo1.createRelationshipTo(insertedNodeNo2, RelTypes.POINTS_TO);
-                            //relationships.setProperty( "RelationshipType", RelType );
+                            
                         }
-                        // System.out.println("2: Successfull Node Insertion to Index");
-                    } else {
-                        //System.out.println("2: FAILURE, Node allready exists");
-
-                    }
-                    //relationship = insertedNodeNo1.createRelationshipTo(insertedNodeNo2, RelTypes.POINTS_TO);
-                    //System.out.println(j+" :      "+ relationship.toString());
+                       
+                    } 
+                    
                 }
 
                 endTime = System.currentTimeMillis();
@@ -122,11 +108,11 @@ public class NeoClass {
             } finally {
                 tx.close();
             }
-            //System.exit(1);
+            
         }
     }
 
-    public void InsertProperties() {
+    public void insertProperties() {
 
         FileReader fr = null;
         try {
@@ -139,18 +125,15 @@ public class NeoClass {
             
             while ((line = br1.readLine()) != null) {
                 array = line.split("\t");
-                //if (array.length != 2) {
-                //    continue;
-                //}
+
                 nodeId = array[0];
                 category = array[1];
                 views = array[2];
                 
                 query = "start n=node:WebSiteId(nodeId='"+nodeId+"') set n.category = '"+category+"', n.views = '"+views+"' return n";
-                //System.out.println(query);
-                //query = "match (n:WebSiteId) where n.nodeId='736'";
+
                 resultString = engine.execute(query).dumpToString();
-                //System.out.println(resultString);
+            
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(NeoClass.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,27 +153,16 @@ public class NeoClass {
         ExecutionEngine engine = new ExecutionEngine(graphDb);
         String resultString;
         startTime = System.currentTimeMillis();
-        System.out.println("hehehehehehe:   " + startTime);
         resultString = engine.execute(query).dumpToString();
-        //resultString = engine.execute( "start n=node:nodes(my_key='2783') match (m), p = shortestPath(n-[*..5]->m) return p" ).dumpToString();
-        //resultString = engine.execute( "start n=node(*) match (n)-->(m) return n,m" ).dumpToString();
-        //resultString = engine.execute( "start n=node:nodes(my_key='2783'),m=node(*) match p = shortestPath(n-[*]->m) return p" ).dumpToString();
-        //resultString = engine.execute( "start n=node(*) match (n)-[*1..5]->(m) return n,m limit 10000" ).dumpToString();
-        //resultString = engine.execute( "start n=node:nodes(my_key='2783') match (n)-[*5]->(m) return n,m" ).dumpToString();
         endTime = System.currentTimeMillis();
         elapsedTime = endTime - startTime;
         System.out.println("Elapsed Time:   " + elapsedTime + " ms");
-        //System.out.println("hahahahahaha:   "+endTime+" "+elapsedTime+" ms");
-        //resultString = engine.execute( "start n=node:nodes(my_key='736') match (n)-->(m) return m" ).dumpToString();
-        //start n=node:nodes(my_key='821') match (n)-[*1..100]->(m) return  n;
 
         return resultString;
     }
 
     private static void registerShutdownHook(final GraphDatabaseService graphDb) {
-        // Registers a shutdown hook for the Neo4j instance so that it
-        // shuts down nicely when the VM exits (even if you "Ctrl-C" the
-        // running application).
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
