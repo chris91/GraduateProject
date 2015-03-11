@@ -42,6 +42,9 @@ public class MainClass {
                 + " and n3.id=e3.from_node and e3.to_node=n4.id and n4.id=e4.from_node and e4.to_node=n5.id"
                 + " and n5.id=e5.from_node and e5.to_node=n6.id and n1.id=350459";
         
+        //mysql> select e1.from_node, e6.to_node from edges as e1, edges as e2, edges as e3, edges as e4, edges as e5, edges as e6
+        //where e1.from_node=350459 and e1.to_node=e2.from_node and e2.to_node=e3.from_node and e3.to_node=e4.from_node and e4.to
+       //_node=e5.from_node and e5.to_node=e6.from_node;
 
         // attribute-based generic queries
         String query6 = "select id, views from nodes where id=3456";

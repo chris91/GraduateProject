@@ -34,7 +34,7 @@ public class NeoClass {
 
     public NeoClass() {
 
-        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB");
+        graphDb = new GraphDatabaseFactory().newEmbeddedDatabase("C:\\Users\\chris91\\Desktop\\WebGoogleNeo4jDB26_11");
         this.registerShutdownHook(graphDb);
         try (Transaction tx = graphDb.beginTx()) {
             nodeIndex = graphDb.index().forNodes("WebSiteId");
